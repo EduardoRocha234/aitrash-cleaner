@@ -1,0 +1,5 @@
+/target
+*.bak
+*.orig
+scratch/
+.claude/settings.local.json

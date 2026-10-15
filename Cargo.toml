@@ -1,0 +1,36 @@
+[package]
+name = "aitrash"
+version = "0.1.0"
+edition = "2024"
+description = "Caça lixo deixado por agentes de IA (Claude Code, Codex, Gemini, Cursor, Windsurf)"
+license = "MIT"
+repository = "https://github.com/EduardoRocha234/aitrash-cleaner"
+homepage = "https://github.com/EduardoRocha234/aitrash-cleaner"
+
+[dependencies]
+anstream = "1.0.0"
+anstyle = "1.0.14"
+clap = { version = "4.6.7", features = ["derive"] }
+dialoguer = "0.12.0"
+dirs = "7.0.0"
+regex = "1.13.1"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+sysinfo = { version = "0.39.6", default-features = false, features = ["system"] }
+trash = "5.2.9"
+walkdir = "2.5.0"
+
+[dev-dependencies]
+assert_cmd = "2.2.2"
+tempfile = "3.27.0"
+
+[profile.release]
+lto = true
+strip = true
+codegen-units = 1
+panic = "abort"
+opt-level = "z"
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
