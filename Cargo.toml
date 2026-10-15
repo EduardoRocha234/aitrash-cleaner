@@ -1,6 +1,6 @@
 [package]
 name = "aitrash"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 description = "Free disk space used by AI coding agents: clean old sessions, caches, leftover files and leaked secrets from Claude Code, Codex, Cursor, Gemini CLI and Windsurf"
 readme = "README.md"
