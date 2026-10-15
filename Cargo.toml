@@ -2,7 +2,10 @@
 name = "aitrash"
 version = "0.1.1"
 edition = "2024"
-description = "Caça lixo deixado por agentes de IA (Claude Code, Codex, Gemini, Cursor, Windsurf)"
+description = "Free disk space used by AI coding agents: clean old sessions, caches, leftover files and leaked secrets from Claude Code, Codex, Cursor, Gemini CLI and Windsurf"
+readme = "README.md"
+keywords = ["claude-code", "cursor", "disk-cleanup", "ai-agents", "cli"]
+categories = ["command-line-utilities", "filesystem"]
 license = "MIT"
 repository = "https://github.com/EduardoRocha234/aitrash-cleaner"
 homepage = "https://github.com/EduardoRocha234/aitrash-cleaner"
