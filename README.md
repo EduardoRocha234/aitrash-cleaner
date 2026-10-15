@@ -1,4 +1,6 @@
-# aitrash
+<p align="center"><img src="assets/logo.png" alt="aitrash-cleaner" width="640"></p>
+
+<h1 align="center">aitrash-cleaner</h1>
 
 Caça o lixo que agentes de IA (Claude Code, Codex, Gemini/Antigravity, Cursor, Windsurf, Kiro) deixam na máquina. É um binário único (cerca de 2 MB), sem runtime, para Linux, macOS e Windows. No WSL ele também varre o perfil do Windows em `/mnt/c/Users`.
 

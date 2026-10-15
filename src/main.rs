@@ -1,5 +1,6 @@
 mod clean;
 mod groups;
+mod logo;
 mod model;
 mod platform;
 mod report;
@@ -9,7 +10,7 @@ mod util;
 
 use anstream::println;
 use anstyle::Style;
-use clap::{Args, Parser, Subcommand};
+use clap::{Args, CommandFactory, FromArgMatches, Parser, Subcommand};
 use model::Category;
 use platform::{Env, APPS, DOT_DIRS};
 use std::io::IsTerminal;
@@ -113,7 +114,8 @@ impl ScanArgs {
 }
 
 fn main() {
-    let cli = Cli::parse();
+    let matches = Cli::command().before_help(logo::render()).get_matches();
+    let cli = Cli::from_arg_matches(&matches).unwrap_or_else(|e| e.exit());
     let env = Env::detect(!cli.no_wsl);
     let cmd = cli.cmd.unwrap_or(Cmd::Scan(ScanArgs { older_than: 30, ..Default::default() }));
 

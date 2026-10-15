@@ -100,7 +100,13 @@ pub fn print_summary(findings: &[Finding]) {
     let groups = crate::groups::group(findings, false);
     let total: u64 = groups.iter().map(|g| g.size).sum();
     println!();
-    println!("{RED}aitrash{RED:#} · {BOLD}{}{BOLD:#} encontrados", human_size(total));
+    if crate::logo::fits() {
+        println!("{}", crate::logo::render());
+        println!();
+        println!("  {BOLD}{}{BOLD:#} encontrados", human_size(total));
+    } else {
+        println!("{RED}aitrash{RED:#} · {BOLD}{}{BOLD:#} encontrados", human_size(total));
+    }
     println!();
     if groups.is_empty() {
         println!("  {GREEN}Nada para limpar.{GREEN:#}");
