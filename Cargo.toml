@@ -1,6 +1,6 @@
 [package]
 name = "aitrash"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "Caça lixo deixado por agentes de IA (Claude Code, Codex, Gemini, Cursor, Windsurf)"
 license = "MIT"

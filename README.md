@@ -88,4 +88,4 @@ O workflow `.github/workflows/release.yml` é gerado pelo [cargo-dist](https://g
 1. Suba `version` no `Cargo.toml`.
 2. Rode `git commit -am "release: v0.2.0" && git tag v0.2.0 && git push --follow-tags`.
 
-O CI compila para Linux (x86_64/arm64, estático), macOS (Intel/Apple Silicon) e Windows. Depois publica os binários, os instaladores e os checksums no GitHub Releases, e o pacote `aitrash` no npm. Para o npm, crie o secret `NPM_TOKEN` no repositório antes.
+O CI compila para Linux (x86_64/arm64, estático), macOS (Intel/Apple Silicon) e Windows. Depois publica os binários, os instaladores e os checksums no GitHub Releases, e o pacote `aitrash` no npm. O npm usa trusted publishing (OIDC), sem token: o pacote `aitrash` confia no workflow `release.yml` deste repositório.

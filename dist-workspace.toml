@@ -15,5 +15,7 @@ targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "aarch64-unknown-linux
 install-path = "~/.local/bin"
 # Whether to install an updater program
 install-updater = false
-# Publish the npm package (needs NPM_TOKEN secret on GitHub)
+# Publish the npm package (via npm trusted publishing / OIDC)
 publish-jobs = ["npm"]
+# release.yml is hand-edited for npm trusted publishing; don't let dist regenerate it
+allow-dirty = ["ci"]
