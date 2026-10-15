@@ -20,6 +20,7 @@ impl Group {
             "editors" => "cache do Cursor/Windsurf/Claude app; recriado sozinho",
             "project" => "backups, scripts de debug e temporários",
             "project-review" => "resumos .md, logs, bancos de teste; veja com -v",
+            "plans" => "planos .md do Claude Code com 30+ dias",
             "procs" => "dev servers esquecidos ocupando portas",
             "protected" => "credenciais e configs; pede confirmação",
             "cache:uv cache" => "pacotes Python baixados pelo uv/uvx",
@@ -72,6 +73,7 @@ fn classify(f: &Finding, hard: bool) -> Option<(String, String, bool)> {
     let g = |k: &str, l: &str, on| Some((k.to_string(), l.to_string(), on));
     match f.category {
         Category::Global if f.kind.ends_with(": cache") => g("editors", "Cache de editores IA", true),
+        Category::Global if f.kind == crate::scanners::global::PLANS_KIND => g("plans", "Planos antigos", false),
         Category::Global if f.preselected => g("sessions", "Sessões antigas dos agentes", true),
         Category::Global => None,
         Category::Project if f.preselected => g("project", "Lixo em projetos", true),
@@ -161,8 +163,9 @@ mod tests {
             f(Category::Project, "config de agente", Some(1)),
             f(Category::Global, "claude: transcrições antigas", Some(9)).preselect(true),
             f(Category::System, "cache: uv cache", Some(1000)),
+            f(Category::Global, crate::scanners::global::PLANS_KIND, Some(2)),
         ];
         let keys: Vec<String> = group(&v, false).into_iter().map(|g| g.key).collect();
-        assert_eq!(keys, ["sessions", "project", "cache:uv cache", "project-review"]);
+        assert_eq!(keys, ["sessions", "project", "cache:uv cache", "plans", "project-review"]);
     }
 }

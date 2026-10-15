@@ -20,6 +20,9 @@ const AGED_DIRS: [(&str, &str); 12] = [
     ("antigravity", ".gemini/antigravity/browser_recordings"),
 ];
 
+/// Plan-mode .md files written by Claude Code.
+pub const PLANS_KIND: &str = "claude: plans antigos";
+
 /// Credential files: flagged, never removed without --hard.
 const CREDENTIALS: [(&str, &str); 4] = [
     ("codex", ".codex/auth.json"),
@@ -40,19 +43,23 @@ pub fn scan(env: &Env, older_than: u64) -> Vec<Finding> {
 }
 
 fn aged_group(out: &mut Vec<Finding>, kind: String, dir: &Path, older_than: u64) {
+    aged_group_with(out, kind, dir, older_than, Confidence::High, true);
+}
+
+fn aged_group_with(out: &mut Vec<Finding>, kind: String, dir: &Path, older_than: u64, confidence: Confidence, preselect: bool) {
     let a = aged_files(dir, older_than);
     if a.files.is_empty() {
         return;
     }
     out.push(
         Finding::new(Category::Global, kind, dir)
-            .confidence(Confidence::High)
+            .confidence(confidence)
             .size(a.bytes)
             .age(a.youngest)
             .note(format!("{} arquivo(s) com {older_than}+ dias", a.files.len()))
             .targets(a.files)
             .action(Action::Trash)
-            .preselect(true),
+            .preselect(preselect),
     );
 }
 
@@ -69,6 +76,8 @@ fn scan_root(root: &Root, older_than: u64, out: &mut Vec<Finding>) {
         let name = rel.rsplit('/').next().unwrap_or(rel);
         aged_group(out, format!("{harness}: {name} antigos"), &h.join(rel), older_than);
     }
+    // Plans may still be referenced by the user: offered, never pre-selected.
+    aged_group_with(out, PLANS_KIND.into(), &h.join(".claude/plans"), older_than, Confidence::Medium, false);
 
     for (harness, rel) in CREDENTIALS {
         let p = h.join(rel);
@@ -152,6 +161,8 @@ mod tests {
         old_file(&h.join(".claude/projects/-p1/b.jsonl"), 1);
         old_file(&h.join(".codex/sessions/2025/01/01/r.jsonl"), 90);
         old_file(&h.join(".codex/auth.json"), 1);
+        old_file(&h.join(".claude/plans/old-plan.md"), 45);
+        old_file(&h.join(".claude/plans/new-plan.md"), 2);
         fs::create_dir_all(h.join(".config/Cursor/CachedData")).unwrap();
         fs::write(h.join(".config/Cursor/CachedData/x"), "1234").unwrap();
 
@@ -164,6 +175,11 @@ mod tests {
         assert!(claude.preselected);
 
         assert!(f.iter().any(|f| f.kind == "codex: sessions antigos" && f.targets.len() == 1));
+
+        let plans = f.iter().find(|f| f.kind == PLANS_KIND).unwrap();
+        assert_eq!(plans.targets.len(), 1);
+        assert!(plans.targets[0].ends_with("old-plan.md"));
+        assert!(!plans.preselected);
 
         let auth = f.iter().find(|f| f.path.ends_with("auth.json")).unwrap();
         assert!(auth.protected && !auth.preselected);
